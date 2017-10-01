@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ReactiveRedux", "ReactiveRedux\ReactiveRedux.fsproj", "{F2ED5807-581F-4EEF-9275-339242190F2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveRedux.Example", "ReactiveRedux.Example\ReactiveRedux.Example.csproj", "{F0AF0DC7-0409-4D13-9BA9-33F98E7DAF05}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ReactiveRedux.Example.Redux", "ReactiveRedux.Example.Redux\ReactiveRedux.Example.Redux.fsproj", "{51BD8B50-E17D-4DFA-B762-D79B223C275A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F2ED5807-581F-4EEF-9275-339242190F2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2ED5807-581F-4EEF-9275-339242190F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2ED5807-581F-4EEF-9275-339242190F2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2ED5807-581F-4EEF-9275-339242190F2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0AF0DC7-0409-4D13-9BA9-33F98E7DAF05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0AF0DC7-0409-4D13-9BA9-33F98E7DAF05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0AF0DC7-0409-4D13-9BA9-33F98E7DAF05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0AF0DC7-0409-4D13-9BA9-33F98E7DAF05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51BD8B50-E17D-4DFA-B762-D79B223C275A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51BD8B50-E17D-4DFA-B762-D79B223C275A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51BD8B50-E17D-4DFA-B762-D79B223C275A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51BD8B50-E17D-4DFA-B762-D79B223C275A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA46E672-DC3C-4D1C-9509-2B668958D32D}
+	EndGlobalSection
+EndGlobal
