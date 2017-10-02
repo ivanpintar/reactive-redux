@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using static ReactiveRedux.Example.Redux.Types;
 using System.Reactive;
 using System.Threading.Tasks;
+using System.Reactive.Subjects;
 
 namespace ReactiveRedux.Example
 {
@@ -20,16 +21,16 @@ namespace ReactiveRedux.Example
             InitializeComponent();
 
             // create initial store and state
-            var state = new State(0);
+            var state = new State(10);
             _store = ReduxC.CreateStore<State, Events>(state, Reducers.reducer);
 
             // subscribe to state changes
-            var incrementStream = _store.StateSubject
+            var incrementStream = _store.StateStream
                 .Select(s => s.total.ToString())
                 .Subscribe(UpdateView);
 
             // really simple "middleware" injection
-            _store.EventSubject
+            _store.EventStream
                 .Where(action => action.IsIncrement)
                 .SelectMany(AsyncSideEffect)
                 .Subscribe();

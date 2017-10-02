@@ -7,27 +7,33 @@ open System
 module Redux =
 
     type Store<'s, 'e> = { dispatch : 'e -> unit 
-                           stateSubject : Subject<'s> 
-                           eventSubject : Subject<'e>
-                           getLastState : unit -> 's
-                           actionObserver : IDisposable}
+                           stateStream : IObservable<'s>
+                           eventStream : IObservable<'e>
+                           getState : unit -> 's
+                           dispose : unit -> unit }
+                           interface IDisposable with 
+                                member this.Dispose() = this.dispose()
                            
     let createStore<'State, 'Event> (initialState:'State) reducer =
-        let stateSubject = new Subject<'State>();
+        let stateSubject = new BehaviorSubject<'State>(initialState);
         let eventSubject = new Subject<'Event>();
         
-        let mutable state = initialState
-        let getNewState event = 
-            state <- reducer state event
-            stateSubject.OnNext state
+        let createNewState event = 
+            let oldState = stateSubject.Value
+            reducer oldState event 
+            |> stateSubject.OnNext         
         
-        let getLastState = fun () -> state
         let dispatch = eventSubject.OnNext
 
-        let actionObserver = Observable.subscribe getNewState eventSubject
+        let eventObserver = Observable.subscribe createNewState eventSubject    
+        
+        let dispose () =
+            stateSubject.Dispose()
+            eventSubject.Dispose()
+            eventObserver.Dispose()
 
         { dispatch = dispatch
-          stateSubject = stateSubject
-          eventSubject = eventSubject
-          getLastState = getLastState
-          actionObserver = actionObserver }
+          stateStream = Observable.asObservable stateSubject
+          eventStream = Observable.asObservable eventSubject
+          getState = fun () -> stateSubject.Value
+          dispose = dispose }
