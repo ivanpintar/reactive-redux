@@ -6,6 +6,10 @@ using static ReactiveRedux.Example.Redux.Types;
 using System.Reactive;
 using System.Threading.Tasks;
 using static ReactiveRedux.Redux;
+using System.Collections.Generic;
+using System.Threading;
+using System.Reactive.Subjects;
+using System.Reactive.Threading.Tasks;
 
 namespace ReactiveRedux.Example
 {
@@ -17,27 +21,34 @@ namespace ReactiveRedux.Example
         public MainWindow()
         {
             InitializeComponent();
-            
+
             // subscribe to state changes
-            var incrementStream = Store.store.stateStream
+            Store.store.stateStream
                 .Select(s => s.total.ToString())
                 .Subscribe(UpdateView);
 
-            // really simple "middleware" injection
-            //Store.store.eventStream
-            //    .Where(action => action.IsIncrement)
-            //    .SelectMany(AsyncSideEffect)
-            //    .Subscribe();
-        }
+            var incrementStream =
+                Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Increment.Click += h, h => Increment.Click -= h)
+                .Select(e => Events.Increment);
 
-        private async Task<Unit> AsyncSideEffect(Events action)
-        {
-            return await Task.Run(async () =>
-            {
-                await Task.Delay(2000);
-                Store.store.dispatch.Invoke(Events.Decrement);
-                return Unit.Default;
-            });
+            // example of async actions using streams
+            var decrementStream =
+                Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Decrement.Click += h, h => Decrement.Click -= h)
+                .SelectMany(e =>
+                {
+                    Log(Store.store.getState.Invoke(null));
+                    var first = Observable.Return(Events.Decrement);
+                    var sec = DelayOneSecond().Select(e2 =>
+                    {
+                        Log(Store.store.getState.Invoke(null));
+                        return Events.Increment;
+                    });
+                    return first.Merge(sec);
+                });
+
+            Store.store.addEventStream.Invoke(incrementStream);
+            Store.store.addEventStream.Invoke(decrementStream);
+
         }
 
         private void UpdateView(string newTotal)
@@ -45,14 +56,14 @@ namespace ReactiveRedux.Example
             Dispatcher.BeginInvoke(new Action(() => Total.Text = newTotal));
         }
 
-        private void Increment_Click(object sender, RoutedEventArgs e)
+        private void Log(object o)
         {
-            Store.dispatchIncThenDec();
+            System.Diagnostics.Debug.WriteLine(o);
         }
 
-        private void Decrement_Click(object sender, RoutedEventArgs e)
+        private IObservable<Unit> DelayOneSecond()
         {
-            Store.dispatchDecrement();
+            return Task.Delay(1000).ToObservable();
         }
     }
 }

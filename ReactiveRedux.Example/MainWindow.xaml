@@ -16,13 +16,11 @@
         <Button Content="+"
                 Grid.Column="2"
                 Margin="10"
-                Name="Increment"
-                Click="Increment_Click"/>
+                Name="Increment"/>
         <Button Content="-"
                 Grid.Column="0"
                 Margin="10"
-                Name="Decrement"
-                Click="Decrement_Click"/>
+                Name="Decrement"/>
 
         <TextBlock FontSize="130"
                    Text="0"

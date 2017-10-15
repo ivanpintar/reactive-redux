@@ -19,7 +19,7 @@ module Types =
 module Reducers =    
     open Types
 
-    let reducer state event = 
+    let reducer event state = 
         match event with
         | Increment -> { state with total = state.total + 1 }
         | Decrement -> { state with total = state.total - 1 }
@@ -28,11 +28,5 @@ module Store =
     open Types
     open Reducers
     open ReactiveRedux.Redux
-
-    let middleware = thunkMiddleware<State, Events>
-
-    let store = createStore { total = 10 } reducer (Some middleware)
-
-    let dispatchIncrement () = store.dispatch (box Increment)    
-    let dispatchDecrement () = store.dispatch (box Decrement)
-    let dispatchIncThenDec () = store.dispatch (box incThenDec)
+    
+    let store = createStore<State, Events> { total = 10 } reducer
