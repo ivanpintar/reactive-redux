@@ -5,7 +5,7 @@ using System.Reactive.Linq;
 using static ReactiveRedux.Example.Redux.Types;
 using System.Reactive;
 using System.Threading.Tasks;
-using System.Reactive.Subjects;
+using static ReactiveRedux.Redux;
 
 namespace ReactiveRedux.Example
 {
@@ -14,26 +14,20 @@ namespace ReactiveRedux.Example
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ReduxC.Store<State, Events> _store;
-
         public MainWindow()
         {
             InitializeComponent();
-
-            // create initial store and state
-            var state = new State(10);
-            _store = ReduxC.CreateStore<State, Events>(state, Reducers.reducer);
-
+            
             // subscribe to state changes
-            var incrementStream = _store.StateStream
+            var incrementStream = Store.store.stateStream
                 .Select(s => s.total.ToString())
                 .Subscribe(UpdateView);
 
             // really simple "middleware" injection
-            _store.EventStream
-                .Where(action => action.IsIncrement)
-                .SelectMany(AsyncSideEffect)
-                .Subscribe();
+            //Store.store.eventStream
+            //    .Where(action => action.IsIncrement)
+            //    .SelectMany(AsyncSideEffect)
+            //    .Subscribe();
         }
 
         private async Task<Unit> AsyncSideEffect(Events action)
@@ -41,7 +35,7 @@ namespace ReactiveRedux.Example
             return await Task.Run(async () =>
             {
                 await Task.Delay(2000);
-                _store.Dispatch(Events.Decrement);
+                Store.store.dispatch.Invoke(Events.Decrement);
                 return Unit.Default;
             });
         }
@@ -53,12 +47,12 @@ namespace ReactiveRedux.Example
 
         private void Increment_Click(object sender, RoutedEventArgs e)
         {
-            _store.Dispatch(Events.Increment);
+            Store.dispatchIncThenDec();
         }
 
         private void Decrement_Click(object sender, RoutedEventArgs e)
         {
-            _store.Dispatch(Events.Decrement);
+            Store.dispatchDecrement();
         }
     }
 }
