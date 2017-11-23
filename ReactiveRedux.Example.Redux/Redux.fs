@@ -8,14 +8,6 @@ module Types =
 
     type State = { total : int }
 
-    let incThenDec (getState:(unit -> State)) dispatch = async {
-        dispatch Events.Increment
-        do! Async.Sleep(1000);
-        dispatch Events.Increment
-        do! Async.Sleep(1000);
-        dispatch Events.Decrement
-    }
-
 module Reducers =    
     open Types
 
